@@ -1,6 +1,5 @@
-
 from tkinter import *
-
+import math
 
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
@@ -17,28 +16,49 @@ LONG_BREAK_MIN = 20
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
-# ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
+def start_timer():
+    count_down(WORK_MIN * 60)
+
+# ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
+
+def count_down(count):
+
+    count_min = math.floor(count / 60)
+    count_sec = count % 60
+
+    if count_sec < 10:
+        count_sec = f"0{count_sec}"
+
+    canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
+    if count > 0:
+        window.after(1000, count_down, count - 1)
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
 window.title("Pomodoro")
-window.config(padx=100, pady=50, bg=BLACK)
+window.config(padx=100, pady=50, bg=YELLOW)
 
 
-canvas = Canvas(width=200, height=224, bg=BLACK, highlightthickness=0)
+canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 img = PhotoImage(file= "tomato.png")
 canvas.create_image(100, 112, image= img)
-canvas.create_text(100, 135, text="00:00", font=(FONT_NAME, 35, "bold"))
+timer_text = canvas.create_text(100, 135, text="00:00", font=(FONT_NAME, 35, "bold"))
 canvas.grid(column=1, row=1)
 
-timer =Label(text="Timer", fg=GREEN, font=(FONT_NAME, 50))
+
+timer =Label(text="Timer", fg=GREEN, font=(FONT_NAME, 50), bg=YELLOW)
 timer.grid(column= 1, row= 0)
 
-start = Button(text="start")
+
+tick =Label(text="✔", fg=GREEN, font=(FONT_NAME, 30), bg=YELLOW)
+tick.grid(column= 1, row= 4)
+
+start = Button(text="start", highlightthickness=0, command=start_timer)
 start.grid(column=0, row=2)
 
-reset = Button(text="reset")
+reset = Button(text="reset", highlightthickness=0)
 reset.grid(column=2, row=2)
 
 
