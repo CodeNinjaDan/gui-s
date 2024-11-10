@@ -24,8 +24,6 @@ label1.grid(column= 2, row= 0)
 label2.grid(column= 0, row= 1)
 label3.grid(column= 2, row= 1)
 
-
-
 result_label = Label(text="0")
 result_label.grid(column=1, row=1)
 
