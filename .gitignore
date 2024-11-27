@@ -4,4 +4,4 @@ venv
 *.pyd
 __pycache__
 *.xml
-data.txt
+data.json
