@@ -43,24 +43,50 @@ def save():
     else:
         try:
             with open("data.json", "r") as data_file:
-                # Try reading old data
+                # Reading old data
                 data = json.load(data_file)
+
         except FileNotFoundError:
             # If file doesn't exist, start with an empty dictionary
-            data = {}
-        except json.JSONDecodeError:
-            # If file is empty or invalid JSON, start with an empty dictionary
-            data = {}
+            # data = {}
+            with open("data.json","w")as data_file:
+                json.dump(new_data,data_file, indent=4)
 
-        # Updating old data with new data
-        data.update(new_data)
+        # except json.JSONDecodeError:
+        #     # If file is empty or invalid JSON, start with an empty dictionary
+        #     data = {}
 
-        with open("data.json", "w") as data_file:
-            # Saving updated data
-            json.dump(data, data_file, indent=4)
+        else:
+            # Updating old data with new data
+            data.update(new_data)
 
+            with open("data.json", "w") as data_file:
+                # Saving updated data
+                json.dump(data, data_file, indent=4)
+
+        finally:
             website_entry.delete(0, END)
             password_entry.delete(0, END)
+
+
+# ---------------------------- SEARCH --------------------------------- #
+
+def find_password():
+    search_key = website_entry.get()
+
+    try:
+        with open("data.json", "r") as file_data:
+            data = json.load(file_data)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No data file exists!")
+
+    else:
+        if search_key in data:
+            email = data[search_key]["email"]
+            password = data[search_key]["password"]
+            messagebox.showinfo(title=search_key, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No details for {search_key} exists!")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -84,12 +110,12 @@ name.grid(column=0, row=2)
 words.grid(column=0, row=3)
 
 
-website_entry = Entry(width=35)
+website_entry = Entry(width=21)
 website_entry.focus()
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry.grid(column=1, row=1)
 
-email_entry = Entry(width=35)
-email_entry.grid(column=1, row=2, columnspan=2)
+email_entry = Entry(width=21)
+email_entry.grid(column=1, row=2)
 email_entry.insert(END, "@gmail.com")
 
 password_entry = Entry(width=21)
@@ -100,6 +126,9 @@ generate_button = Button(text="Generate Password", command=generate_password)
 save_button = Button(text="Add", width=36, command=save)
 generate_button.grid(column=2, row=3)
 save_button.grid(column=1, row=4, columnspan=2)
+
+search_button = Button(text="Search", command=find_password)
+search_button.grid(column=2, row=1)
 
 
 window.mainloop()
